@@ -13,22 +13,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Card {
-  id      Int    @id @default(autoincrement())
-  deckCards DeckCard[]
+model Deck {
+  deck_id           Int        @id @default(autoincrement())
+  name              String
+  parent_id         Int?
+  created_timestamp DateTime   @default(now())
+  updated_timestamp DateTime   @default(now())
+  parent            Deck?      @relation("DeckToDeck", fields: [parent_id], references: [deck_id])
+  children          Deck[]     @relation("DeckToDeck")
+  deckCards         DeckCard[]
+
+  @@map("deck")
 }
 
-model Deck {
-  id      Int       @id @default(autoincrement())
-  deckCards DeckCard[]
+model Card {
+  card_id           Int        @id @default(autoincrement())
+  content           String
+  created_timestamp DateTime   @default(now())
+  updated_timestamp DateTime   @default(now())
+  deckCards         DeckCard[]
+
+  @@map("card")
 }
 
 model DeckCard {
   cardId  Int
   deckId  Int
   order   Int       // Added field to keep track of card order within a deck
-  card    Card @relation(fields: [cardId], references: [id])
-  deck    Deck @relation(fields: [deckId], references: [id])
+  card    Card      @relation(fields: [cardId], references: [card_id])
+  deck    Deck      @relation(fields: [deckId], references: [deck_id])
 
   @@id([cardId, deckId])
   @@unique([deckId, order]) // Composite unique constraint
