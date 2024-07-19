@@ -18,8 +18,12 @@ MYSQL_ROOT_PASSWORD=[PASSWORD]
 
     Seed Data: 
 
-    ```npx prisma db seed```
-    
+    ```npm run prisma:seed```
+
+    DB overview (not exhaustive): 
+
+    ![Schema Overview](images/overview.png "This is a rough layout of the schema")
+
 3) Start server
 
     ```npm run start:dev``` 
